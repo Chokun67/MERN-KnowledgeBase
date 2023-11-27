@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
-function Addrule({ facts }) {
+function Editrule({ ruleData }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState("");
@@ -11,6 +11,19 @@ function Addrule({ facts }) {
   const [opconclude, setopConclude] = useState("");
   const [cause, setCause] = useState([]);
   const [conclude, setConclude] = useState([]);
+  const [facts, setFacts] = useState([]);
+
+  useEffect(() => {
+    setLoading(true);
+    axios.get("http://localhost:5555/facts").then((response) => {
+        setFacts(response.data.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      })
+  }, []);
 
   const handleSelect = (event) => {
     const selectedValue =  facts.find(option => option._id === event.target.value);
@@ -48,7 +61,7 @@ function Addrule({ facts }) {
       operatorConclude :opconclude
     };
     console.log(data);
-    axios.post("http://localhost:5555/rules", data)
+    axios.post(`http://localhost:5555/rules/${id}`, data)
     .then(() => {
       // navigate("/rules");
       window.location.reload();
@@ -70,7 +83,7 @@ function Addrule({ facts }) {
             เพิ่ม
           </button>
         </div>
-        <div className="h-28 overflow-auto bg-gray-100 m-2 p-2h-60 overflow-auto">
+        <div className="h-32 w-64 overflow-auto bg-gray-100 m-2 p-2h-60 overflow-auto">
           {cause.map((item, index) => (
             <p key={index+1}>{item.fact}</p>
           ))}
@@ -98,7 +111,7 @@ function Addrule({ facts }) {
             เพิ่ม
           </button>
         </div>
-        <div className="h-28 overflow-auto bg-gray-100 m-2 p-2h-60 overflow-auto">
+        <div className="h-32 w-64 overflow-auto bg-gray-100 m-2 p-2h-60 overflow-auto">
           {conclude.map((item, index) => (
             <p key={index}>{item.fact}</p>
           ))}
@@ -117,11 +130,9 @@ function Addrule({ facts }) {
         </div>
       </div>
     </div>
-    <button className="flex-4 ml-2 rounded-lg border border-solid border-gray-400 px-4 text-lg" onClick={handleAddRule}>
-    เพิ่มข้อมูลกฏ
-  </button>
+    
   </>
   );
 }
 
-export default Addrule;
+export default Editrule;

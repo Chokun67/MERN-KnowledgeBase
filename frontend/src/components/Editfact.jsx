@@ -71,8 +71,7 @@ function Editfact() {
           <button
             type="submit"
             className="login-button"
-            onClick={handleEditBook}
-          >
+            onClick={handleEditBook}>
             save
           </button>
         </form>
