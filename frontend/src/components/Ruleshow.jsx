@@ -67,8 +67,8 @@ function Ruledata({ knowledge }) {
               <td>{knowledge.operatorConclude}</td>
               <td>
                 <div className='flex justify-center gap-x-4'>
-                  <AiOutlineEdit className='text-2xl text-yellow-600' onClick={openModal}/>
-                  <MdOutlineDelete className='text-2xl text-red-600' onClick={() => handleDeleteBook(knowledge._id)}/>
+                  <AiOutlineEdit className='text-2xl text-yellow-600 cursor-pointer' onClick={()=>openModal(index)}/>
+                  <MdOutlineDelete className='text-2xl text-red-600 cursor-pointer' onClick={() => handleDeleteBook(knowledge._id)}/>
                 </div>
               </td>
             </tr>

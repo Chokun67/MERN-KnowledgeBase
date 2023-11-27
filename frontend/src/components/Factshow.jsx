@@ -47,7 +47,7 @@ const Fact = ({ facts }) => {
                   <Link to={`/editfact/${book._id}`}>
                     <AiOutlineEdit className='text-2xl text-yellow-600' />
                   </Link>
-                  <MdOutlineDelete className='text-2xl text-red-600' onClick={() => handleDeleteBook(book._id)}/>
+                  <MdOutlineDelete className='text-2xl text-red-600 cursor-pointer' onClick={() => handleDeleteBook(book._id)}/>
                 </div>
               </td>
             </tr>

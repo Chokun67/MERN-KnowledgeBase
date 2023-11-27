@@ -8,7 +8,7 @@ function Editmodal({isOpen, onClose,ruleData}) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState("");
-  const [selectedOption2, setSelectedOption2] = useState("");
+  // const [selectedOption2, setSelectedOption2] = useState("");
   const [opcause, setopCause] = useState("");
   const [opconclude, setopConclude] = useState("");
   const [cause, setCause] = useState([]);
@@ -19,12 +19,15 @@ function Editmodal({isOpen, onClose,ruleData}) {
     setLoading(true);
     axios.get("http://localhost:5555/facts").then((response) => {
         setFacts(response.data.data);
-        setLoading(false);
+        setCause(ruleData.causeFacts);
+        setConclude(ruleData.concludeFacts);
+        setLoading(false); 
       })
       .catch((error) => {
         console.log(error);
         setLoading(false);
-      })
+      });
+    
   }, []);
 
   const handleSelect = (event) => {
@@ -41,7 +44,7 @@ function Editmodal({isOpen, onClose,ruleData}) {
   const handleAddConclude = () => {
     if (selectedOption) {
       setConclude((prevCause) => [...prevCause, selectedOption]);
-      setSelectedOption2("");
+      setSelectedOption("");
     }
   };
  
@@ -62,7 +65,7 @@ function Editmodal({isOpen, onClose,ruleData}) {
       operatorConclude :opconclude
     };
     console.log(data);
-    axios.post(`http://localhost:5555/rules/${ruleData._id}`, data)
+    axios.put(`http://localhost:5555/rules/${ruleData._id}`, data)
     .then(() => {
       // navigate("/rules");
       window.location.reload();

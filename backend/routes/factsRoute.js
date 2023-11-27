@@ -1,9 +1,9 @@
 import express from 'express';
-import { Book } from '../models/factModel.js';
+import { Fact } from '../models/factModel.js';
 
 const router = express.Router();
 
-// Route for Save a new Book
+// Route for Save a new Fact
 router.post('/', async (request, response) => {
   try {
     if (
@@ -14,28 +14,28 @@ router.post('/', async (request, response) => {
         message: 'Send all required fields: fact, descliption, publishYear',
       });
     }
-    const newBook = {
+    const newFact = {
       fact: request.body.fact,
       descliption: request.body.descliption,
     };
 
-    const book = await Book.create(newBook);
+    const fact = await Fact.create(newFact);
 
-    return response.status(201).send(book);
+    return response.status(201).send(fact);
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });
   }
 });
 
-// Route for Get All Books from database
+// Route for Get All Facts from database
 router.get('/', async (request, response) => {
   try {
-    const books = await Book.find({});
+    const facts = await Fact.find({});
 
     return response.status(200).json({
-      count: books.length,
-      data: books,
+      count: facts.length,
+      data: facts,
     });
   } catch (error) {
     console.log(error.message);
@@ -43,21 +43,21 @@ router.get('/', async (request, response) => {
   }
 });
 
-// Route for Get One Book from database by id
+// Route for Get One Fact from database by id
 router.get('/:id', async (request, response) => {
   try {
     const { id } = request.params;
 
-    const book = await Book.findById(id);
+    const fact = await Fact.findById(id);
 
-    return response.status(200).json(book);
+    return response.status(200).json(fact);
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });
   }
 });
 
-// Route for Update a Book
+// Route for Update a fact
 router.put('/:id', async (request, response) => {
   try {
     if (
@@ -71,31 +71,31 @@ router.put('/:id', async (request, response) => {
 
     const { id } = request.params;
 
-    const result = await Book.findByIdAndUpdate(id, request.body);
+    const result = await Fact.findByIdAndUpdate(id, request.body);
 
     if (!result) {
-      return response.status(404).json({ message: 'Book not found' });
+      return response.status(404).json({ message: 'Fact not found' });
     }
 
-    return response.status(200).send({ message: 'Book updated successfully' });
+    return response.status(200).send({ message: 'Fact updated successfully' });
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });
   }
 });
 
-// Route for Delete a book
+// Route for Delete a fact
 router.delete('/:id', async (request, response) => {
   try {
     const { id } = request.params;
 
-    const result = await Book.findByIdAndDelete(id);
+    const result = await Fact.findByIdAndDelete(id);
 
     if (!result) {
-      return response.status(404).json({ message: 'Book not found' });
+      return response.status(404).json({ message: 'Fact not found' });
     }
 
-    return response.status(200).send({ message: 'Book deleted successfully' });
+    return response.status(200).send({ message: 'Fact deleted successfully' });
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });

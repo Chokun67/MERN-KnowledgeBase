@@ -86,6 +86,8 @@ router.get('/:id', async (request, response) => {
 // Route for Update a rule
 router.put('/:id', async (request, response) => {
   try {
+    const { id } = request.params;
+
     if (
       !request.body.cause ||
       !request.body.operatorCause ||
@@ -93,24 +95,34 @@ router.put('/:id', async (request, response) => {
       !request.body.operatorConclude
     ) {
       return response.status(400).send({
-        message: 'Send all required fields: id, author, publishYear',
+        message: 'Send all required fields: cause, operatorCause, conclude, operatorConclude',
       });
     }
 
-    const { id } = request.params;
+    // แปลง string เป็น ObjectID
+    const causeObjectIDs = request.body.cause.map((causeID) => new mongoose.Types.ObjectId(causeID));
+    const concludeObjectIDs = request.body.conclude.map((concludeID) => new mongoose.Types.ObjectId(concludeID));
 
-    const result = await Rules.findByIdAndUpdate(id, request.body);
+    const newrule = {
+      cause: causeObjectIDs,
+      operatorCause: request.body.operatorCause,
+      conclude: concludeObjectIDs,
+      operatorConclude: request.body.operatorConclude,
+    };
+
+    const result = await Rules.findByIdAndUpdate(id, newrule, { new: true });
 
     if (!result) {
       return response.status(404).json({ message: 'rule not found' });
     }
 
-    return response.status(200).send({ message: 'rule updated successfully' });
+    return response.status(200).send({ message: 'rule updated successfully', data: result });
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });
   }
 });
+
 
 // Route for Delete a rule
 router.delete('/:id', async (request, response) => {
