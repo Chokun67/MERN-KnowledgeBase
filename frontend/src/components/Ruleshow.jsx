@@ -62,8 +62,11 @@ function Ruledata({ knowledge }) {
                 </React.Fragment>))}
               </td>
               <td>{knowledge.operatorCause}</td>
-              <td>{knowledge.concludeFacts.map((fact,index) => (
-                fact.fact))}</td>
+              <td>{knowledge.concludeFacts.map((fact, index) => (
+                <React.Fragment key={index}>
+                  {fact.fact}{index !== knowledge.concludeFacts.length - 1 && <br />}
+                </React.Fragment>))}
+              </td>
               <td>{knowledge.operatorConclude}</td>
               <td>
                 <div className='flex justify-center gap-x-4'>

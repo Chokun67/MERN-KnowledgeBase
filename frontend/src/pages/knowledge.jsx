@@ -25,9 +25,9 @@ function Knowledge() {
 
   return (
     <>
-      <div className="flex flex-col w-screen fixed top-0 left-0">
+      <div className="flex flex-col w-screen overflow-x-hidden">
         <Navi />
-        <div className="bg-sky-200 w-60vw h-80vh flex justify-center items-center flex-col">
+        <div className="bg-sky-200 w-60vw flex items-center flex-col min-h-screen">
           <p>ชื่อผู้ใช้งาน: จอนสมิท</p>
           <Link to="/createfact">add</Link>
           <Factshow facts={facts} />

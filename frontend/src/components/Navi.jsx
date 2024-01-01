@@ -6,7 +6,7 @@ function Navi() {
   return (
     <nav className="flex items-center justify-between flex-wrap bg-teal-500 py-6 px-32">
     <div className="flex items-center flex-shrink-0 text-white mr-6">    
-      <Link to="/">
+      <Link to="/inference">
         <span className="font-semibold text-3xl tracking-tight">Inference Engine</span>
       </Link>
     </div>

@@ -86,6 +86,11 @@ function Addrule({ facts }) {
             onChange={handleOptionChange}/>
             <span className="ml-2">Or</span>
           </label>
+          <label className="inline-flex items-center">
+            <input type="radio"className="form-radio text-red-500"name="radio-option" value="none" checked={opcause === 'none'}
+            onChange={handleOptionChange}/>
+            <span className="ml-2">None</span>
+          </label>
         </div>
       </div>
       <div className="flex flex-col flex-1 px-8">
@@ -113,6 +118,11 @@ function Addrule({ facts }) {
             <input type="radio"className="form-radio text-red-500"name="radio-option2"value="or" checked={opconclude === 'or'}
             onChange={handleOptionChange2}/>
             <span className="ml-2">Or</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input type="radio"className="form-radio text-red-500"name="radio-option2" value="none" checked={opconclude === 'none'}
+            onChange={handleOptionChange2}/>
+            <span className="ml-2">None</span>
           </label>
         </div>
       </div>

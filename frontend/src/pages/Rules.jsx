@@ -30,9 +30,9 @@ function Rules() {
   }, []);
   return (
     <>
-      <div className="flex flex-col w-screen bg-gray-300 fixed top-0 left-0">
+      <div className="flex flex-col w-screen min-h-screen bg-sky-200 flex justify-start">
         <Navi />
-        <div className="bg-sky-200 w-60vw h-80vh flex justify-center items-center flex-col px-12">
+        <div className="w-60vw h-80vh flex justify-center items-center flex-col px-12">
           <p>ชื่อผู้ใช้งาน: จอนสมิท</p>
           <Addrule facts={facts} />
           <Ruledata knowledge={knowledge} />

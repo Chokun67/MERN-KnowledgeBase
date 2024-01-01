@@ -8,6 +8,8 @@ import Knowledge from "./pages/knowledge.jsx";
 import Rules from "./pages/Rules.jsx";
 import Editfact from "./components/Editfact.jsx";
 import Addfact from "./pages/addfact.jsx";
+import Inference from "./pages/Inference.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -34,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/rules/addrules",
     element: <Addfact />,
+  },
+  {
+    path: "/inference",
+    element: <Inference />,
   },
 ]);
 
