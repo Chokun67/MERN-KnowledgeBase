@@ -6,33 +6,35 @@ import axios from "axios";
 function Inference() {
   const [loading, setLoading] = useState(false);
   const [startinfer, setStartinfer] = useState([]);
+  const [inferrule, setInferrule] = useState([]);
+  const [questionrule, setQuestionrule] = useState([]);
   const [responses, setResponses] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [factIndex, setFactIndex] = useState(0);
   const [isInferenceComplete, setIsInferenceComplete] = useState(false);
-  useEffect(() => {
-    if (isInferenceComplete) {
-      // กระบวนการเสร็จสิ้น, ทำอะไรก็ตามที่คุณต้องการหลังจากนั้น
-      console.log("Inference complete!");
-    }
-  }, [isInferenceComplete]);
-  const questions = [
-    "This is one (y/n)",
-    "This is two (y/n)",
-    "This is three (y/n)",
-    "This is four (y/n)",
-    "This is five (y/n)",
-  ];
 
   const handleResponse = (response) => {
     setResponses((prevResponses) => [
       ...prevResponses,
-      `${questions[currentQuestionIndex]} ${response}`,
+      `${questionrule[currentQuestionIndex][factIndex]} ${response}`,
     ]);
 
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+    if (response == "y") {
+      if (inferrule[currentQuestionIndex].operatorCause == "and" && factIndex < questionrule[currentQuestionIndex].length-1) {
+        setFactIndex((prevIndex) => prevIndex + 1);//and = anothercheck
+        return;
+      }
+      console.log(inferrule[currentQuestionIndex].conclude);
+      Inferengine(inferrule[currentQuestionIndex].conclude);
+      setQuestionrule([]);
+      setCurrentQuestionIndex(0);
+      setFactIndex(0);
     } else {
-      setIsInferenceComplete(true);
+      if (inferrule[currentQuestionIndex].operatorCause == "or" && factIndex <= questionrule[currentQuestionIndex].length-1) {
+        setFactIndex((prevIndex) => prevIndex + 1);//or = anothercheck
+        return;
+      }
+      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
     }
   };
 
@@ -41,12 +43,42 @@ function Inference() {
     axios
       .get("http://localhost:5555/infer")
       .then((response) => {
+        Inferengine(response.data);
         setStartinfer(response.data);
-        console.log(response.data);
-        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
+      });
+  };
+
+  const Inferengine = (respara) => {
+    axios
+      .get("http://localhost:5555/infer/check", {
+        params: {
+          data: respara,
+        },
+      })
+      .then((response) => {
+        if (response.data.message) {
+          setResponses((prevResponses) => [
+            ...prevResponses,
+            `result is : ${inferrule[currentQuestionIndex].concludeFacts[0].fact}`,
+          ]);
+          return;
+        }
+        console.log("ค่าที่หา", response.data.foundRules);
+        setInferrule(response.data.foundRules);
+        const causeFactsArray = response.data.foundRules.map((rule) =>
+          rule.causeFacts.map((fact) => `${fact.fact} (y/n) :`)
+        );
+        setQuestionrule(causeFactsArray);
+        setLoading(false);
+        console.log("question1", causeFactsArray);
+        console.log("question", questionrule);
+      })
+      .catch((error) => {
+        console.error(error);
         setLoading(false);
       });
   };
@@ -71,9 +103,11 @@ function Inference() {
           {responses.map((response, index) => (
             <p key={index}>{response}</p>
           ))}
-          {currentQuestionIndex < questions.length && (
+          {currentQuestionIndex < questionrule.length && (
             <div className="flex items-center">
-              <p className="mr-2">{questions[currentQuestionIndex]}</p>
+              <p className="mr-2">
+                {questionrule[currentQuestionIndex][factIndex]}
+              </p>
               <input
                 type="text"
                 className="bg-black text-white border-none p-2 focus:outline-none"
