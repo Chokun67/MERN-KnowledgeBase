@@ -49,6 +49,9 @@ router.get('/:id', async (request, response) => {
     const { id } = request.params;
 
     const fact = await Fact.findById(id);
+    if (!fact) {
+      return response.status(404).json({ message: 'Fact not found' });
+    }
 
     return response.status(200).json(fact);
   } catch (error) {
