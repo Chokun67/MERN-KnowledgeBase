@@ -188,6 +188,7 @@ router.get("/check", async (req, res) => {
   if (!Array.isArray(data)) {
     return res.status(400).send({ message: "data must be an array" });
   }
+  console.log(data);
   // try {
   //   // ดึงข้อมูล rules ทั้งหมด
   //   const rules = await Rules.find({});
@@ -205,33 +206,17 @@ router.get("/check", async (req, res) => {
 
   try {
     // ใช้ aggregation pipeline เพื่อกรองข้อมูลตามเงื่อนไข
-    const foundRules = await Rules.aggregate([
+    const foundRules = await Fact.aggregate([
       {
         $match: {
-          cause: { $in: data.map((item) => new mongoose.Types.ObjectId(item)) },
-        },
-      },
-      {
-        $lookup: {
-          from: "facts", // ตั้งชื่อ collection ของ facts
-          localField: "cause",
-          foreignField: "_id",
-          as: "causeFacts",
-        },
-      },
-      {
-        $lookup: {
-          from: "facts", // ตั้งชื่อ collection ของ facts
-          localField: "conclude",
-          foreignField: "_id",
-          as: "concludeFacts",
+          fact: { $in: data.map((item) => (item)) },
         },
       },
     ]);
     console.log(foundRules);
 
-    if (foundRules.length === 0) {
-      return res.status(200).send({ message: "inference success" });
+    if (foundRules.length == 0) {
+      return res.status(404).send({ message: "inference error" });
     }
 
     return res.status(200).send({ foundRules });
