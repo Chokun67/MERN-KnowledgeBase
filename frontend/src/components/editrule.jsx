@@ -83,7 +83,7 @@ function Editrule({ ruleData }) {
             เพิ่ม
           </button>
         </div>
-        <div className="h-32 w-64 overflow-auto bg-gray-100 m-2 p-2h-60 overflow-auto">
+        <div className="h-32 w-64 overflow-auto bg-gray-100 m-2 p-2h-60">
           {cause.map((item, index) => (
             <p key={index+1}>{item.fact}</p>
           ))}
@@ -111,7 +111,7 @@ function Editrule({ ruleData }) {
             เพิ่ม
           </button>
         </div>
-        <div className="h-32 w-64 overflow-auto bg-gray-100 m-2 p-2h-60 overflow-auto">
+        <div className="h-32 w-64 overflow-auto bg-gray-100 m-2 p-2h-60 ">
           {conclude.map((item, index) => (
             <p key={index}>{item.fact}</p>
           ))}

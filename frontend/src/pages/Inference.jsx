@@ -48,7 +48,7 @@ function Inference() {
       workmemo_T: workmemo_T,
     };
     axios
-      .post("http://localhost:5555/infer/test2", requestData)
+      .post("http://localhost:5555/infer/test3", requestData)
       .then((response) => {
         if (response.data && response.data.fact) {
           setQuestionrule([response.data]);
