@@ -1,7 +1,14 @@
 import express from 'express';
 import { Fact } from '../models/factModel.js';
-
+import multer from 'multer';
 const router = express.Router();
+
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const currentFileUrl = import.meta.url;
+const currentFilePath = fileURLToPath(currentFileUrl);
+const currentDirectory = dirname(currentFilePath);
 
 // Route for Save a new Fact
 router.post('/', async (request, response) => {
@@ -104,5 +111,20 @@ router.delete('/:id', async (request, response) => {
     response.status(500).send({ message: error.message });
   }
 });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(currentDirectory, '../uploads'))
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+
+const upload = multer({ storage: storage })
+
+router.post('/upload', upload.single('file'), function (req, res, next) {
+  console.log("succesl upload");
+  res.send(req.file)
+})
 
 export default router;
