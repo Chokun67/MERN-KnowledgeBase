@@ -5,19 +5,20 @@ import axios from "axios";
 
 function Inference() {
   const [loading, setLoading] = useState(false);
-  const [startinfer, setStartinfer] = useState([]);
   const [questionrule, setQuestionrule] = useState([]);
   const [responses, setResponses] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [workmemo_F, setWorkmemo_F] = useState([]);
   const [workmemo_T, setWorkmemo_T] = useState([]);
   const [inputValue, setInputValue] = useState(""); // สร้าง state เพื่อเก็บค่าจากช่องกรอกข้อมูล
-
+  const [responsesY, setResponsesY] = useState([]);
+  const [finalresult, setFinalresult] = useState([]);
   const handleResponse = async (response) => {
     setResponses((prevResponses) => [
       ...prevResponses,
       `${questionrule[currentQuestionIndex].fact} : ${response}`,
     ]);
+    setResponsesY((preRes) => [...preRes, response]);
 
     if (response == "y") {
       setWorkmemo_T((prevResponses) => [
@@ -52,22 +53,20 @@ function Inference() {
       .then((response) => {
         if (response.data && response.data.fact) {
           setQuestionrule([response.data]);
+          console.log("test555", response.data);
           setLoading(false);
         } else if (response.data && response.data.answerfinal) {
           if (response.data.answerfinal.length < 1) {
             setQuestionrule([]);
-            setResponses((prevResponses) => [
-              ...prevResponses,
-              "result not found",
-            ]);
+            setFinalresult(["R"]);
+            setWorkmemo_F([]);
+            setWorkmemo_T([]);
           } else {
             setQuestionrule([]);
-            setResponses((prevResponses) => [
-              ...prevResponses,
-              `result is ${response.data.answerfinal
-                .map((obj) => obj.fact)
-                .join(", ")}`,
-            ]);
+            setFinalresult(response.data.answerfinal);
+            console.log(response.data.answerfinal);
+            setWorkmemo_F([]);
+            setWorkmemo_T([]);
           }
         }
       })
@@ -83,8 +82,13 @@ function Inference() {
 
   const handleButtonClick = () => {
     setLoading(true);
+    setWorkmemo_F([]);
+    setWorkmemo_T([]);
+    setFinalresult([]);
     setResponses([]);
     setQuestionrule([]);
+    setResponsesY([]);
+
     if (inputValue.trim() !== "") {
       const valuesArray = inputValue.split(",").map((value) => value.trim());
       // เพิ่มค่าใหม่ลงในอาร์เรย์เมื่อคลิกปุ่ม
@@ -110,11 +114,11 @@ function Inference() {
   return (
     <div className="flex flex-col w-screen fixed top-0 left-0">
       <Navi />
-      <div className="bg-sky-200 w-60vw h-screen flex items-center flex-col px-32">
+      <div className="bg-sky-200 w-60vw h-screen flex items-center flex-col px-8 lg:px-32">
         <div className="w-full items-left">
           <p className="text-lg font-bold py-2">Inference by fact</p>
           <p className="text-base">
-            Tp Insert a multiple fact use this systex to in put fact a,c,e in
+            To Insert a multiple fact use this systex to in put fact a,c,e in
             working memory
           </p>
           <div className="flex items-center space-x-4 w-full">
@@ -136,32 +140,98 @@ function Inference() {
             </button>
           </div>
         </div>
-        <div className="bg-black text-white w-full h-96 p-6 my-4 overflow-y-auto">
+        <div className="bg-gray-200 text-black w-full h-96 p-6 my-4 overflow-y-auto">
           {responses.map((response, index) => (
-            <p key={index}>{response}</p>
+            <div className="flex justify-center items-center mb-2 bg-white border border-gray-300 rounded-md">
+              <div className="text-lg p-4 ">
+                <p>{response}</p>
+              </div>
+              <div className="flex ml-4">
+                {responsesY[index] == "y" ? (
+                  <button className="py-2 px-4 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600">
+                    ใช่
+                  </button>
+                ) : (
+                  <button className="ml-2 py-2 px-4 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600">
+                    ไม่ใช่
+                  </button>
+                )}
+              </div>
+            </div>
           ))}
+          {finalresult.length != 0 ? (
+            finalresult[0]!="R"  ? (
+              <div className="flex justify-center items-center bg-white border border-gray-300 rounded-md flex-col">
+                <div className="text-lg p-4 ">
+                  <p>
+                    Result is {finalresult.map((obj) => obj.fact).join(", ")}
+                  </p>
+                </div>
+                {finalresult.map((obj) => (
+                  <div
+                    key={obj._id}
+                    className="bg-gray-200 w-3/4 p-4 m-4 rounded-md"
+                  >
+                    <p className="text-lg">Fact: {obj.fact}</p>
+                    <p className="text-lg">Description: {obj.descliption}</p>
+                    <div className="flex justify-center items-center">
+                      <div className="flex justify-center items-center w-48 h-48">
+                        <img
+                          src={`http://localhost:5555/static/${obj.picture}`}
+                          alt="รูปภาพ"
+                          className="w-full h-auto"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex justify-center items-center bg-white border border-gray-300 rounded-md flex-col">
+                <div className="text-lg p-4 ">
+                  <p>Result not found</p>
+                </div>
+              </div>
+            )
+          ) : (
+            <div></div>
+          )}
           {currentQuestionIndex < questionrule.length && (
-            <div className="flex items-center">
-              <p className="mr-2">
-                {questionrule[currentQuestionIndex].fact} :
-              </p>
-              <input
-                type="text"
-                className="bg-black text-white border-none p-2 focus:outline-none"
-                placeholder="Type your response here..."
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    const response = e.target.value.trim().toLowerCase();
-                    if (response === "y" || response === "n") {
-                      handleResponse(response);
-                      e.target.value = "";
-                    } else {
-                      alert('Please enter either "y" or "n"');
-                    }
-                  }
-                }}
-              />
+            <div className="w-full flex flex-col items-center">
+              <div className="flex justify-center items-center w-full bg-white border border-gray-300 rounded-md">
+                <div className="text-lg p-4 ">
+                  {questionrule[currentQuestionIndex].fact}
+                </div>
+                <div className="flex ml-4">
+                  <button
+                    className="py-2 px-4 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600"
+                    onClick={() => handleResponse("y")}
+                  >
+                    ใช่
+                  </button>
+                  <button
+                    className="ml-2 py-2 px-4 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600"
+                    onClick={() => handleResponse("n")}
+                  >
+                    ไม่ใช่
+                  </button>
+                </div>
+              </div>
+              {questionrule[currentQuestionIndex].picture != null ? (
+                <div className=" w-11/12 bg-white border border-gray-300 rounded-md">
+                  <div className="flex justify-center items-center">
+                    <div className="flex justify-center items-center w-48 h-48">
+                      <img
+                        src={`http://localhost:5555/static/${questionrule[currentQuestionIndex].picture}`}
+                        alt="รูปภาพ"
+                        className="w-full h-auto"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div></div>
+              )}
             </div>
           )}
         </div>

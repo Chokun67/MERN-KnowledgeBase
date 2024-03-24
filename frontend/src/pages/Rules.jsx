@@ -30,7 +30,7 @@ function Rules() {
   }, []);
   return (
     <>
-      <div className="flex flex-col w-screen min-h-screen bg-sky-200 flex justify-start">
+      <div className="flex-col w-full absolute top-0 bg-sky-200 flex justify-start">
         <Navi />
         <div className="w-60vw h-80vh flex justify-center items-center flex-col px-12">
           <p>ชื่อผู้ใช้งาน: จอนสมิท</p>

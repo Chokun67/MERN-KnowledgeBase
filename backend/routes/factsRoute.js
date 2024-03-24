@@ -10,8 +10,19 @@ const currentFileUrl = import.meta.url;
 const currentFilePath = fileURLToPath(currentFileUrl);
 const currentDirectory = dirname(currentFilePath);
 
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(currentDirectory, '../uploads'))
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+
+const upload = multer({ storage: storage })
 // Route for Save a new Fact
-router.post('/', async (request, response) => {
+router.post('/',upload.single('file'),async (request, response) => {
   try {
     if (
       !request.body.fact ||
@@ -21,9 +32,17 @@ router.post('/', async (request, response) => {
         message: 'Send all required fields: fact, descliption, publishYear',
       });
     }
+    let picture; //check image
+    if (request.file) {
+      picture = request.file.filename;
+    } else {
+      picture = null; // Set picture to null if no file is uploaded
+    }
+    ////about picture
     const newFact = {
       fact: request.body.fact,
       descliption: request.body.descliption,
+      picture: picture
     };
 
     const fact = await Fact.create(newFact);
@@ -68,31 +87,50 @@ router.get('/:id', async (request, response) => {
 });
 
 // Route for Update a fact
-router.put('/:id', async (request, response) => {
+router.put('/:id', upload.single('file'), async (request, response) => {
   try {
-    if (
-      !request.body.fact ||
-      !request.body.descliption 
-    ) {
+    const { id } = request.params;
+
+    // Check if fact and descliption are provided
+    if (!request.body.fact || !request.body.descliption) {
       return response.status(400).send({
-        message: 'Send all required fields: id, descliption, publishYear',
+        message: 'Send all required fields: fact, descliption',
       });
     }
 
-    const { id } = request.params;
+    let picture = null;
+    // Check if file is uploaded
+    if (request.file) {
+      picture = request.file.filename;
+    }
 
-    const result = await Fact.findByIdAndUpdate(id, request.body);
+    // Construct the updatedFact object
+    const updatedFact = {
+      fact: request.body.fact,
+      descliption: request.body.descliption,
+    };
 
+    // If picture is provided, add it to the updatedFact object
+    if (picture) {
+      updatedFact.picture = picture;
+    }
+
+    // Find the fact by id and update it
+    const result = await Fact.findByIdAndUpdate(id, updatedFact);
+
+    // Check if the fact with the given id exists
     if (!result) {
       return response.status(404).json({ message: 'Fact not found' });
     }
 
+    // Return success message
     return response.status(200).send({ message: 'Fact updated successfully' });
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });
   }
 });
+
 
 // Route for Delete a fact
 router.delete('/:id', async (request, response) => {
@@ -111,20 +149,21 @@ router.delete('/:id', async (request, response) => {
     response.status(500).send({ message: error.message });
   }
 });
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(currentDirectory, '../uploads'))
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname)
-  }
-})
 
-const upload = multer({ storage: storage })
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, path.join(currentDirectory, '../uploads'))
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.originalname)
+//   }
+// })
+
+// const upload = multer({ storage: storage })
 
 router.post('/upload', upload.single('file'), function (req, res, next) {
   console.log("succesl upload");
-  res.send(req.file)
+  res.send(req.file.filename)
 })
 
 export default router;

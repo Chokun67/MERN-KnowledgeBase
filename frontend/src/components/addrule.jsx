@@ -59,7 +59,7 @@ function Addrule({ facts }) {
   }
   return (
     <>
-    <div className="flex w-full h-full ">
+    <div className="flex w-full h-full max-w-screen-xl">
       <div className="flex flex-col flex-1 px-8">
         <label htmlFor="dropdown">เลือก Facts:</label>
         <div className="flex w-full max-h-8">
@@ -127,7 +127,7 @@ function Addrule({ facts }) {
         </div>
       </div>
     </div>
-    <button className="flex-4 ml-2 rounded-lg border border-solid border-gray-400 px-4 text-lg" onClick={handleAddRule}>
+    <button className="flex-4 ml-2 rounded-lg border border-solid border-gray-600 px-4 text-lg bg-blue-400" onClick={handleAddRule}>
     เพิ่มข้อมูลกฏ
   </button>
   </>

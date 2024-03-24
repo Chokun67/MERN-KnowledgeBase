@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 
 function Navi() {
   return (
-    <nav className="flex items-center justify-between flex-wrap bg-teal-500 py-6 px-32">
+    <nav className="flex items-center justify-between flex-wrap bg-[#4682b4] py-6 px-6 lg:px-32">
     <div className="flex items-center flex-shrink-0 text-white mr-6">    
       <Link to="/inference">
-        <span className="font-semibold text-3xl tracking-tight">Inference Engine</span>
+        <span className="font-semibold text-3xl tracking-tight text-teal-200 hover:text-white mr-4">Medical Expert System</span>
       </Link>
     </div>
     <div className="block lg:hidden">
@@ -18,14 +18,14 @@ function Navi() {
     <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
       <div className="text-sm lg:flex-grow">
         <Link to="/data" className="block mt-4 lg:inline-block lg:mt-0 text-lg text-teal-200 hover:text-white mr-4">
-        Facts
+        Facts Editor
         </Link>
         <Link to="/rules" className="block mt-4 lg:inline-block lg:mt-0 text-lg text-teal-200 hover:text-white mr-4">
-          Knowledge
+        Rules Editor
         </Link>
       </div>
       <div>
-        <a href="#" className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Download</a>
+        <a href="#" className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Login</a>
       </div>
     </div>
   </nav>

@@ -76,10 +76,10 @@ function Editrule({ ruleData }) {
       <div className="flex flex-col flex-1 px-8">
         <label htmlFor="dropdown">เลือก Facts:</label>
         <div className="flex w-full max-h-8">
-          <select className="flex-1 rounded" id="dropdown" onChange={handleSelect} value={selectedOption._id}>
+          <select className="flex-1 rounded bg-gray-400" id="dropdown" onChange={handleSelect} value={selectedOption._id}>
           {facts.map((option, index) => (<option key={index + 1} value={option._id}>{option.fact}</option>))}
           </select>
-          <button className="flex-4 ml-2 rounded-lg border border-solid border-gray-400 px-4 text-lg" onClick={handleAddData}>
+          <button className="flex-4 ml-2 rounded-lg border border-solid border-gray-800 px-4 text-lg" onClick={handleAddData}>
             เพิ่ม
           </button>
         </div>

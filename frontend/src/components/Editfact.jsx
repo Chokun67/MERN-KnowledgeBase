@@ -7,6 +7,7 @@ function Editfact() {
     const [fact, setfact] = useState('');
     const [descliption, setdescliption] = useState('');
     const [loading, setLoading] = useState(false);
+    const [picture, setPicture] = useState(null);
     const navigate = useNavigate();
     const {id} = useParams();
   
@@ -25,13 +26,13 @@ function Editfact() {
     }, [])
     
     const handleEditBook = () => {
-      const data = {
-        fact,
-        descliption,
-      };
+      const formData = new FormData();
+    formData.append('fact', fact);
+    formData.append('descliption', descliption);
+    formData.append('file', picture);
       setLoading(true);
       axios
-        .put(`http://localhost:5555/facts/${id}`, data)
+        .put(`http://localhost:5555/facts/${id}`, formData)
         .then(() => {
           setLoading(false);
           enqueueSnackbar('Book Edited successfully', { variant: 'success' });
@@ -43,6 +44,11 @@ function Editfact() {
           enqueueSnackbar('Error', { variant: 'error' });
           console.log(error);
         });
+    };
+
+    const handleFileChange = (event) => {
+      const file = event.target.files[0]; // รับไฟล์ที่ผู้ใช้เลือก
+      setPicture(file);
     };
 
   return (
@@ -68,6 +74,15 @@ function Editfact() {
             onChange={(e) => setdescliption(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2  w-full "
           />
+          <div className="flex-part1">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="inputStyle"
+                  name="file"
+                />
+          </div>
           <button
             type="submit"
             className="login-button"

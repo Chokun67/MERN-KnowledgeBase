@@ -22,12 +22,11 @@ app.use(cors());
 //     allowedHeaders: ['Content-Type'],
 //   })
 // );
-
 app.get('/', (request, response) => {
   console.log(request);
   return response.status(234).send('Welcome To MERN Stack Tutorial');
 });
-
+app.use('/static', express.static('uploads'))
 app.use('/facts', factsRoute);
 app.use('/rules', rulesRoute);
 app.use('/infer', inference);

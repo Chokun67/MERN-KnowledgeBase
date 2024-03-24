@@ -192,20 +192,6 @@ router.get("/check", async (req, res) => {
     return res.status(400).send({ message: "data must be an array" });
   }
   console.log(data);
-  // try {
-  //   // ดึงข้อมูล rules ทั้งหมด
-  //   const rules = await Rules.find({});
-  //   console.log(rules);
-
-  //   // ตรวจสอบว่ามี cause จาก data ใน rules หรือไม่
-  //   const foundRules = rules.filter(rule => {
-  //     return data.some(dataItem => rule.cause.includes(dataItem));
-  //   });
-
-  //   return res.status(200).send({ foundRules });
-  // } catch (error) {
-  //   res.status(500).send({ message: error.message });
-  // }
 
   try {
     // ใช้ aggregation pipeline เพื่อกรองข้อมูลตามเงื่อนไข
@@ -355,6 +341,7 @@ router.post("/test3", async (req, res) => {
     console.error("Error querying MongoDB:", error);
     return res.status(500).send({ error: "Internal Server Error" });
   });
+  console.log(answerfinal)
   return res.status(200).send({ answerfinal });
 });
 
