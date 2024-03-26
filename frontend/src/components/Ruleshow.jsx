@@ -1,15 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { AiOutlineEdit } from 'react-icons/ai';
-import {  MdOutlineDelete } from 'react-icons/md';
+import { AiOutlineEdit } from "react-icons/ai";
+import { MdOutlineDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import Modal from '../components/Editmodal';
+import Modal from "../components/Editmodal";
 
-function Ruledata({ knowledge }) {
+function Ruledata({  categoryData ,addRuleControl}) {
   const [loading, setLoading] = useState(false);
   const [selectedrule, setSelectedrule] = useState(null);
+  const [knowledge, setKnowledge] = useState([]);
+  const [reloadValue, setReloadValue] = useState(0);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get(`http://localhost:5555/rules?category_id=${categoryData}`)
+      .then((response) => {
+        setKnowledge(response.data.data);
+        setLoading(false);
+        console.log(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+  }, [categoryData,reloadValue,addRuleControl]);
 
   const handleDeleteBook = (id) => {
     setLoading(true);
@@ -17,8 +34,9 @@ function Ruledata({ knowledge }) {
       .delete(`http://localhost:5555/rules/${id}`)
       .then(() => {
         setLoading(false);
-        navigate('/rules');
-        window.location.reload(); // รีโหลดหน้าเว็บ
+        navigate("/rules");
+        setReloadValue((pre) => pre+1)
+        // window.location.reload(); // รีโหลดหน้าเว็บ
       })
       .catch((error) => {
         setLoading(false);
@@ -26,6 +44,7 @@ function Ruledata({ knowledge }) {
         console.log(error);
       });
   };
+
   const [isModalOpen, setModalOpen] = useState(false);
   const openModal = (index) => {
     setSelectedrule(knowledge[index]);
@@ -38,49 +57,66 @@ function Ruledata({ knowledge }) {
 
   return (
     <>
-    <div className="flex w-full h-full justify-center items-center mt-8">
-      <Modal isOpen={isModalOpen} onClose={closeModal} ruleData={selectedrule}/>
-    <div className='w-9/12'>
-      <table>
-        <thead>
-          <tr>
-            <th>No.</th>
-            <th>Cause</th>
-            <th>opCause</th>
-            <th>Conclude</th>
-            <th>opConclude</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-        <tbody>
-          {knowledge.map((knowledge, index) => (
-            <tr key={knowledge._id}>
-              <td>{index + 1}</td>
-              <td>{knowledge.causeFacts.map((fact, index) => (
-                <React.Fragment key={index}>
-                  {fact.fact}{index !== knowledge.causeFacts.length - 1 && <br />}
-                </React.Fragment>))}
-              </td>
-              <td>{knowledge.operatorCause}</td>
-              <td>{knowledge.concludeFacts.map((fact, index) => (
-                <React.Fragment key={index}>
-                  {fact.fact}{index !== knowledge.concludeFacts.length - 1 && <br />}
-                </React.Fragment>))}
-              </td>
-              <td>{knowledge.operatorConclude}</td>
-              <td>
-                <div className='flex justify-center gap-x-4'>
-                  <AiOutlineEdit className='text-2xl text-yellow-600 cursor-pointer' onClick={()=>openModal(index)}/>
-                  <MdOutlineDelete className='text-2xl text-red-600 cursor-pointer' onClick={() => handleDeleteBook(knowledge._id)}/>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    </div>
-  </>
+      <div className="flex w-full h-full justify-center items-center my-8">
+        <Modal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          ruleData={selectedrule}
+          categoryData={categoryData}
+        />
+        <div className="max-w-6xl w-full min-h-96 h-96 bg-white overflow-auto">
+          <table>
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Cause</th>
+                <th>opCause</th>
+                <th>Conclude</th>
+                <th>opConclude</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              {knowledge.map((knowledge, index) => (
+                <tr key={knowledge._id}>
+                  <td>{index + 1}</td>
+                  <td>
+                    {knowledge.causeFacts.map((fact, index) => (
+                      <React.Fragment key={index}>
+                        {fact.fact}
+                        {index !== knowledge.causeFacts.length - 1 && <br />}
+                      </React.Fragment>
+                    ))}
+                  </td>
+                  <td>{knowledge.operatorCause}</td>
+                  <td>
+                    {knowledge.concludeFacts.map((fact, index) => (
+                      <React.Fragment key={index}>
+                        {fact.fact}
+                        {index !== knowledge.concludeFacts.length - 1 && <br />}
+                      </React.Fragment>
+                    ))}
+                  </td>
+                  <td>{knowledge.operatorConclude}</td>
+                  <td>
+                    <div className="flex justify-center gap-x-4">
+                      <AiOutlineEdit
+                        className="text-2xl text-yellow-600 cursor-pointer"
+                        onClick={() => openModal(index)}
+                      />
+                      <MdOutlineDelete
+                        className="text-2xl text-red-600 cursor-pointer"
+                        onClick={() => handleDeleteBook(knowledge._id)}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
   );
 }
 

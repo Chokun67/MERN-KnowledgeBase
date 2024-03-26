@@ -17,7 +17,10 @@ const ruleSchema = mongoose.Schema(
     operatorConclude: {
       type: String,
       required: true,
-    },
+    },category_id:{
+      type: String,
+      required: false
+    }
   },
   {
     timestamps: true,

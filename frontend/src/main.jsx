@@ -26,7 +26,7 @@ const router = createBrowserRouter([
     element: <Editfact />,
   },
   {
-    path: "/createfact",
+    path: "/createfact/:id",
     element: <Addfact />,
   },
   {

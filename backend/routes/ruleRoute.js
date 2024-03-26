@@ -10,7 +10,8 @@ router.post('/', async (request, response) => {
       !request.body.cause ||
       !request.body.operatorCause ||
       !request.body.conclude ||
-      !request.body.operatorConclude
+      !request.body.operatorConclude ||
+      !request.body.category_id
     ) {
       return response.status(400).send({
         message: 'Send all required fields: ' + response.statusCode,
@@ -20,12 +21,15 @@ router.post('/', async (request, response) => {
     // แปลง string เป็น ObjectID
     const causeObjectIDs = request.body.cause.map((causeID) => new mongoose.Types.ObjectId(causeID));
     const concludeObjectIDs = request.body.conclude.map((concludeID) => new mongoose.Types.ObjectId(concludeID));
+     // แปลง string เป็น ObjectID
+    const categoryID = new mongoose.Types.ObjectId(request.body.category_id)
 
     const newrule = {
       cause: causeObjectIDs,
       operatorCause: request.body.operatorCause,
       conclude: concludeObjectIDs,
       operatorConclude: request.body.operatorConclude,
+      category_id: categoryID
     };
 
     const rule = await Rules.create(newrule);
@@ -40,7 +44,14 @@ router.post('/', async (request, response) => {
 // Route for Get All Rules from database
 router.get('/', async (request, response) => {
   try {
+    const { category_id } = request.query;
+
     const rulesWithFacts = await Rules.aggregate([
+      {
+        $match: {
+          category_id: category_id  // กำหนดเงื่อนไขการค้นหาเฉพาะ category_id ที่รับมาจาก params
+        }
+      },
       {
         $lookup: {
           from: 'facts', // ตั้งชื่อ collection ของ facts
@@ -58,6 +69,7 @@ router.get('/', async (request, response) => {
         },
       },
     ]);
+    console.log(rulesWithFacts);
 
     return response.status(200).json({
       count: rulesWithFacts.length,

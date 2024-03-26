@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const bookSchema = mongoose.Schema(
+const factSchema = mongoose.Schema(
   {
     fact: {
       type: String,
@@ -12,6 +12,9 @@ const bookSchema = mongoose.Schema(
     },picture:{
       type: String,
       required: false
+    },category_id:{
+      type: String,
+      required: false
     }
   },
   {
@@ -19,4 +22,4 @@ const bookSchema = mongoose.Schema(
   }
 );
 
-export const Fact = mongoose.model('facts', bookSchema);
+export const Fact = mongoose.model('facts', factSchema);

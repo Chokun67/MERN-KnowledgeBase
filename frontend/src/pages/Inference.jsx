@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navi from "../components/Navi";
 import { Link } from "react-router-dom";
+import Category from "../components/category";
 import axios from "axios";
 
 function Inference() {
@@ -11,8 +12,9 @@ function Inference() {
   const [workmemo_F, setWorkmemo_F] = useState([]);
   const [workmemo_T, setWorkmemo_T] = useState([]);
   const [inputValue, setInputValue] = useState(""); // สร้าง state เพื่อเก็บค่าจากช่องกรอกข้อมูล
-  const [responsesY, setResponsesY] = useState([]);
-  const [finalresult, setFinalresult] = useState([]);
+  const [responsesY, setResponsesY] = useState([]); // result form user what day chose
+  const [finalresult, setFinalresult] = useState([]); // ตัวรับข้อมูลจาก response
+  const [categoryValue, setcategoryValue] = useState(null); //select category
   const handleResponse = async (response) => {
     setResponses((prevResponses) => [
       ...prevResponses,
@@ -111,11 +113,16 @@ function Inference() {
     }
   };
 
+  const handleReceiveValue = (value) => {
+    setcategoryValue(value);
+  };
+
   return (
-    <div className="flex flex-col w-screen fixed top-0 left-0">
+    <div className="flex flex-col w-screen h-full fixed top-0 left-0 overflow-auto">
       <Navi />
-      <div className="bg-sky-200 w-60vw h-screen flex items-center flex-col px-8 lg:px-32">
-        <div className="w-full items-left">
+      <div className="bg-sky-200 h-full flex items-center flex-col px-8 lg:px-0">
+      <Category onReceiveValue={handleReceiveValue} />
+        <div className="w-full items-left max-w-6xl">
           <p className="text-lg font-bold py-2">Inference by fact</p>
           <p className="text-base">
             To Insert a multiple fact use this systex to in put fact a,c,e in
@@ -140,7 +147,7 @@ function Inference() {
             </button>
           </div>
         </div>
-        <div className="bg-gray-200 text-black w-full h-96 p-6 my-4 overflow-y-auto">
+        <div className="bg-gray-200 text-black w-full h-[460px] p-6 my-4 max-w-6xl overflow-y-auto">
           {responses.map((response, index) => (
             <div className="flex justify-center items-center mb-2 bg-white border border-gray-300 rounded-md">
               <div className="text-lg p-4 ">

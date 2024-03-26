@@ -1,10 +1,10 @@
-import React, { useState,useEffect } from 'react';
-import { AiOutlineEdit } from 'react-icons/ai';
+import React, { useState, useEffect } from "react";
+import { AiOutlineEdit } from "react-icons/ai";
 // import { BsInfoCircle } from 'react-icons/bs';
-import { MdOutlineAddBox, MdOutlineDelete } from 'react-icons/md';
+import { MdOutlineAddBox, MdOutlineDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
-import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 const Fact = ({ facts }) => {
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,7 @@ const Fact = ({ facts }) => {
       .delete(`http://localhost:5555/facts/${id}`)
       .then(() => {
         setLoading(false);
-        navigate('/data');
+        navigate("/data");
         window.location.reload(); // รีโหลดหน้าเว็บ
       })
       .catch((error) => {
@@ -26,37 +26,57 @@ const Fact = ({ facts }) => {
       });
   };
   return (
-    <div className='w-9/12'>
-      <table>
-        <thead>
-          <tr>
-            <th>No.</th>
-            <th>Facts</th>
-            <th>Descliption</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-        <tbody>
-          {facts.map((book, index) => (
-            <tr key={book._id}>
-              <td>{index + 1}</td>
-              <td>{book.fact}</td>
-              <td>{book.descliption}</td>
-              <td>
-                <div className='flex justify-center gap-x-4'>
-                  <Link to={`/editfact/${book._id}`}>
-                    <AiOutlineEdit className='text-2xl text-yellow-600' />
-                  </Link>
-                  <MdOutlineDelete className='text-2xl text-red-600 cursor-pointer' onClick={() => handleDeleteBook(book._id)}/>
-                </div>
-              </td>
+    <div className="w-9/12 min-h-96 h-96 bg-white overflow-auto">
+      {facts.length > 0 ? (
+        <table>
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Facts</th>
+              <th>Descliption</th>
+              <th>Edit</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {facts.map((book, index) => (
+              <tr key={book._id}>
+                <td>{index + 1}</td>
+                <td>{book.fact}</td>
+                <td>{book.descliption}</td>
+                <td>
+                  <div className="flex justify-center gap-x-4">
+                    <Link to={`/editfact/${book._id}`}>
+                      <AiOutlineEdit className="text-2xl text-yellow-600" />
+                    </Link>
+                    <MdOutlineDelete
+                      className="text-2xl text-red-600 cursor-pointer"
+                      onClick={() => handleDeleteBook(book._id)}
+                    />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <div className="h-full w-full flex flex-col">
+          <table>
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Facts</th>
+                <th>Descliption</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+          </table>
+          <div className="h-full flex justify-center items-center text-lg">
+            Plese select category
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default Fact;
-

@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import factsRoute from './routes/factsRoute.js';
 import rulesRoute from './routes/ruleRoute.js';
 import inference from './routes/Inference.js';
+import categoryRoute from './routes/categoryRoute.js';
+
 import cors from 'cors';
 
 const app = express();
@@ -29,7 +31,9 @@ app.get('/', (request, response) => {
 app.use('/static', express.static('uploads'))
 app.use('/facts', factsRoute);
 app.use('/rules', rulesRoute);
+app.use('/category', categoryRoute);
 app.use('/infer', inference);
+
 
 mongoose
   .connect('mongodb://localhost:27017/Bookstore')

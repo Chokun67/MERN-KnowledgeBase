@@ -236,35 +236,40 @@ router.post("/test3", async (req, res) => {
     rule.cause.forEach((id) => causes.add(id.toString()));
   }
 
+  //find starting node
   const nonConcludedFacts = facts.filter(
     (fact) => !conclusions.has(fact._id.toString())
   );
   const transformedFacts = nonConcludedFacts.map((fact) => fact._id.toString());
 
+  //find concluding node
   const nonConcludedFacts2 = facts.filter(
     (fact) => !causes.has(fact._id.toString())
   );
   const concludingnode = nonConcludedFacts2.map((fact) => fact._id.toString());
 
+  //funtion ask user
   async function askUser(data) {
     const resultString = data.cause.map((objId) => objId.toString());
     const startnode = resultString.filter((item) =>
       transformedFacts.includes(item)
     );
-    console.log(startnode,"start")
-    const startnodeFliter = startnode.filter((item) =>
-    !(receivedData.workmemo_T.includes(item)) && !(receivedData.workmemo_F.includes(item))
+    console.log(startnode, "start");
+    const startnodeFliter = startnode.filter(
+      (item) =>
+        !receivedData.workmemo_T.includes(item) &&
+        !receivedData.workmemo_F.includes(item)
     );
-    console.log(startnodeFliter,"fliter")
-    
+    console.log(startnodeFliter, "fliter");
+
     if (startnodeFliter.length > 0) {
       const factask = await Fact.findById(startnodeFliter[0]);
-      return factask
+      return factask;
     } else {
       return null;
     }
   }
-  /////////เริ่มลูป
+  /////////start loop
   let rules_test = await Rules.find({});
 
   for (let x = 0; x < rules_test.length; x++) {
@@ -285,7 +290,7 @@ router.post("/test3", async (req, res) => {
         x = -1;
       } else {
         const factaskresult = await askUser(result_2);
-        if(factaskresult){
+        if (factaskresult) {
           return res.status(200).json(factaskresult);
         }
         continue;
@@ -304,7 +309,7 @@ router.post("/test3", async (req, res) => {
         x = -1;
       } else {
         const factaskresult = await askUser(result_2);
-        if(factaskresult){
+        if (factaskresult) {
           return res.status(200).json(factaskresult);
         }
         continue;
@@ -322,7 +327,7 @@ router.post("/test3", async (req, res) => {
         // console.log(receivedData.workmemo_T, "memorynone");
       } else {
         const factaskresult = await askUser(result_2);
-        if(factaskresult){
+        if (factaskresult) {
           return res.status(200).json(factaskresult);
         }
         continue;
@@ -341,7 +346,7 @@ router.post("/test3", async (req, res) => {
     console.error("Error querying MongoDB:", error);
     return res.status(500).send({ error: "Internal Server Error" });
   });
-  console.log(answerfinal)
+  console.log(answerfinal);
   return res.status(200).send({ answerfinal });
 });
 

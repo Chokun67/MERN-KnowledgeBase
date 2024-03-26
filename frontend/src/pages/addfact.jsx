@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import Navi from "../components/Navi";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,useParams} from "react-router-dom";
 
 function addfact() {
   const [fact, setfact] = useState("");
@@ -9,12 +9,14 @@ function addfact() {
   const [loading, setLoading] = useState(false);
   const [picture, setPicture] = useState(null);
   const navigate = useNavigate();
+  const {id} = useParams();
 
   const handleSaveFact = () => {
     const formData = new FormData();
     formData.append('fact', fact);
     formData.append('descliption', descliption);
     formData.append('file', picture);
+    formData.append('category_id', id);
 
     setLoading(true);
     axios.post("http://localhost:5555/facts", formData)

@@ -9,7 +9,7 @@ function Editfact() {
     const [loading, setLoading] = useState(false);
     const [picture, setPicture] = useState(null);
     const navigate = useNavigate();
-    const {id} = useParams();
+    const { id } = useParams();
   
     useEffect(() => {
       setLoading(true);
