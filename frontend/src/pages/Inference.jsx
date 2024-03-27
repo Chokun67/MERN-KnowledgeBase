@@ -51,7 +51,7 @@ function Inference() {
       workmemo_T: workmemo_T,
     };
     axios
-      .post("http://localhost:5555/infer/test3", requestData)
+      .post(`http://localhost:5555/infer/test3?category_id=${categoryValue}`, requestData)
       .then((response) => {
         if (response.data && response.data.fact) {
           setQuestionrule([response.data]);
@@ -90,26 +90,30 @@ function Inference() {
     setResponses([]);
     setQuestionrule([]);
     setResponsesY([]);
-
-    if (inputValue.trim() !== "") {
-      const valuesArray = inputValue.split(",").map((value) => value.trim());
-      // เพิ่มค่าใหม่ลงในอาร์เรย์เมื่อคลิกปุ่ม
-      // setInputValue(''); // ล้างค่าในช่องกรอกข้อมูล
-      const queryParams = valuesArray.join("&data[]=");
-      axios
-        .get(`http://localhost:5555/infer/check?data[]=${queryParams}`)
-        .then((response) => {
-          // Inferengine2();
-          console.log(response.data);
-          const _idArray = response.data.foundRules.map((item) => item._id);
-          setWorkmemo_T(_idArray);
-        })
-        .catch((error) => {
-          console.log(error);
-          setLoading(false);
-        });
-    } else {
-      Inferengine2();
+    
+    if(categoryValue!=null){
+      if (inputValue.trim() !== "") {
+        const valuesArray = inputValue.split(",").map((value) => value.trim());
+        // เพิ่มค่าใหม่ลงในอาร์เรย์เมื่อคลิกปุ่ม
+        // setInputValue(''); // ล้างค่าในช่องกรอกข้อมูล
+        const queryParams = valuesArray.join("&data[]=");
+        axios
+          .get(`http://localhost:5555/infer/check?data[]=${queryParams}`)
+          .then((response) => {
+            // Inferengine2();
+            console.log(response.data);
+            const _idArray = response.data.foundRules.map((item) => item._id);
+            setWorkmemo_T(_idArray);
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoading(false);
+          });
+      } else {
+        Inferengine2();
+      }
+    }else{
+      console.log("plsese select category")
     }
   };
 

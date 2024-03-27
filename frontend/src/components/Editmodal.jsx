@@ -74,6 +74,15 @@ function Editmodal({isOpen, onClose,ruleData,categoryData}) {
       console.log(error);
     });
   }
+  const handleRemoveCause = (index) => {
+    // สร้างรายการ cause ใหม่โดยลบสมาชิกที่มีดัชนีเป็น index ออกไป
+    const updatedCause = cause.filter((item, idx) => idx !== index);
+    setCause(updatedCause);
+  };
+  const handleRemoveConclude = (index) => {
+    const updatedConclude = conclude.filter((item, idx) => idx !== index);
+    setCause(updatedConclude);
+  };
   return (
     <div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
@@ -94,11 +103,22 @@ function Editmodal({isOpen, onClose,ruleData,categoryData}) {
             เพิ่ม
           </button>
         </div>
-        <div className="h-32 w-64 overflow-auto bg-gray-100 m-2 p-2h-60 ">
-          {cause.map((item, index) => (
-            <p key={index+1}>{item.fact}</p>
-          ))}
-        </div>
+        <div className="h-28 overflow-auto bg-gray-100 m-2">
+            {cause.map((item, index) => (
+              <div
+                key={index + 1}
+                className="flex items-center justify-between border-b py-2"
+              >
+                <p>{item.fact}</p>
+                <button
+                  onClick={() => handleRemoveCause(index)}
+                  className="text-red-500"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
         <div className="flex w-full space-x-4">
           <label className="inline-flex items-center">
             <input type="radio"className="form-radio text-red-500"name="radio-option" value="and" checked={opcause === 'and'}
@@ -127,11 +147,22 @@ function Editmodal({isOpen, onClose,ruleData,categoryData}) {
             เพิ่ม
           </button>
         </div>
-        <div className="h-32 w-64 overflow-auto bg-gray-100 m-2 p-2h-60">
-          {conclude.map((item, index) => (
-            <p key={index}>{item.fact}</p>
-          ))}
-        </div>
+        <div className="h-28 overflow-auto bg-gray-100 m-2">
+            {conclude.map((item, index) => (
+              <div
+                key={index + 1}
+                className="flex items-center justify-between border-b py-2"
+              >
+                <p>{item.fact}</p>
+                <button
+                  onClick={() => handleRemoveConclude(index)}
+                  className="text-red-500"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
         <div className="flex w-full space-x-4">
           <label className="inline-flex items-center">
             <input type="radio"className="form-radio text-red-500"name="radio-option2"value="and" checked={opconclude === 'and'}

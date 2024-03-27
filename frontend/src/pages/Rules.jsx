@@ -15,6 +15,16 @@ function Rules() {
   useEffect(() => {
     setLoading(true);
     axios
+      .get(`http://localhost:5555/facts?category_id=${categoryValue}`)
+      .then((response) => {
+        setFacts(response.data.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+    axios
       .get(`http://localhost:5555/rules?category_id=${categoryValue}`)
       .then((response) => {
         setKnowledge(response.data.data);

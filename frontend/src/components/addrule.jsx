@@ -29,7 +29,7 @@ function Addrule({ facts, category_id, onReceiveValue, addRuleControl }) {
   const handleAddConclude = () => {
     if (selectedOption) {
       setConclude((prevCause) => [...prevCause, selectedOption]);
-      setSelectedOption2("");
+      setSelectedOption("");
     }
   };
 
@@ -81,6 +81,16 @@ function Addrule({ facts, category_id, onReceiveValue, addRuleControl }) {
     }
   };
 
+  const handleRemoveCause = (index) => {
+    // สร้างรายการ cause ใหม่โดยลบสมาชิกที่มีดัชนีเป็น index ออกไป
+    const updatedCause = cause.filter((item, idx) => idx !== index);
+    setCause(updatedCause);
+  };
+  const handleRemoveConclude = (index) => {
+    const updatedConclude = conclude.filter((item, idx) => idx !== index);
+    setCause(updatedConclude);
+  };
+
   return (
     <>
       <div className="flex w-full h-full max-w-6xl flex-col lg:flex-row">
@@ -106,9 +116,20 @@ function Addrule({ facts, category_id, onReceiveValue, addRuleControl }) {
               เพิ่ม
             </button>
           </div>
-          <div className="h-28 overflow-auto bg-gray-100 m-2 ">
+          <div className="h-28 overflow-auto bg-gray-100 m-2">
             {cause.map((item, index) => (
-              <p key={index + 1}>{item.fact}</p>
+              <div
+                key={index + 1}
+                className="flex items-center justify-between border-b py-2"
+              >
+                <p>{item.fact}</p>
+                <button
+                  onClick={() => handleRemoveCause(index)}
+                  className="text-red-500"
+                >
+                  Remove
+                </button>
+              </div>
             ))}
           </div>
           <div className="flex w-full space-x-4">
@@ -169,9 +190,20 @@ function Addrule({ facts, category_id, onReceiveValue, addRuleControl }) {
               เพิ่ม
             </button>
           </div>
-          <div className="h-28 overflow-auto bg-gray-100 m-2 p-2h-60 ">
+          <div className="h-28 overflow-auto bg-gray-100 m-2">
             {conclude.map((item, index) => (
-              <p key={index}>{item.fact}</p>
+              <div
+                key={index + 1}
+                className="flex items-center justify-between border-b py-2"
+              >
+                <p>{item.fact}</p>
+                <button
+                  onClick={() => handleRemoveConclude(index)}
+                  className="text-red-500"
+                >
+                  Remove
+                </button>
+              </div>
             ))}
           </div>
           <div className="flex w-full space-x-4">

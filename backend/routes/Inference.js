@@ -215,6 +215,10 @@ router.get("/check", async (req, res) => {
 });
 
 router.post("/test3", async (req, res) => {
+    const { category_id } = req.query;
+    const categoryID = new mongoose.Types.ObjectId(category_id);
+    // find by category
+   
   // ในที่นี้เราสมมติว่าค่าที่ต้องการรับมาเป็น Object { key1: 'value1', key2: 'value2' }
   if (!req.body.workmemo_T || !req.body.workmemo_F) {
     return response.status(400).send({
@@ -226,12 +230,17 @@ router.post("/test3", async (req, res) => {
     workmemo_F: req.body.workmemo_F,
   };
   ///////////////หา fact เริ่มต้น
-  const facts = await Fact.find({}).select("_id");
+ let facts
+  if (category_id) {
+    facts = await Fact.find({ category_id: categoryID }).select('_id');
+  } else {
+    return res.status(500).send({ error: "Internal Server Error" });
+  }
 
   const conclusions = new Set();
   const causes = new Set();
 
-  for (const rule of await Rules.find({})) {
+  for (const rule of await Rules.find({ category_id: categoryID })) {
     rule.conclude.forEach((id) => conclusions.add(id.toString()));
     rule.cause.forEach((id) => causes.add(id.toString()));
   }
@@ -270,7 +279,7 @@ router.post("/test3", async (req, res) => {
     }
   }
   /////////start loop
-  let rules_test = await Rules.find({});
+  let rules_test = await Rules.find({ category_id: categoryID });
 
   for (let x = 0; x < rules_test.length; x++) {
     let matchmid;
