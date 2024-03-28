@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import swalactive from "./swalfire";
 
 function Addrule({ facts, category_id, onReceiveValue, addRuleControl }) {
   const [loading, setLoading] = useState(false);
@@ -41,6 +42,10 @@ function Addrule({ facts, category_id, onReceiveValue, addRuleControl }) {
   };
 
   const handleAddRule = () => {
+    if(category_id==null){
+      swalactive("warning","Plese selected catrgory")
+      return
+    }
     const causeIds = cause.map((item) => item._id);
     const concludeIds = conclude.map((item) => item._id);
     const data = {
@@ -57,11 +62,14 @@ function Addrule({ facts, category_id, onReceiveValue, addRuleControl }) {
         // navigate("/rules");
         // window.location.reload();
         // ทำสิ่งที่ต้องการกับค่าที่ได้รับ เช่น ส่งกลับไปยังคอมโพเนนต์หลัก
+        
         handleSelectCategory(addRuleControl);
         handleStart();
+        swalactive("success","Successfully added information")
       })
       .catch((error) => {
         console.log(error);
+        swalactive("error","Failed to add information")
       });
   };
 

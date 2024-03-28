@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import swalactive from '../components/swalfire';
 
 function Signin() {
   const navigate = useNavigate();
@@ -39,10 +40,11 @@ function Signin() {
 
       const data = await response.json();
       localStorage.setItem('token', data.token); // Store the token
-      navigate('/data'); // Navigate after login
+      navigate('/inference'); // Navigate after login
+      swalactive("success","Login success")
     } catch (error) {
       console.error('Login error:', error);
-      alert('Login failed'); // Basic error handling
+      swalactive("error","Login failed");
     }
   };
 

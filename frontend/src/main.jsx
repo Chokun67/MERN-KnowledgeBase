@@ -9,6 +9,7 @@ import Rules from "./pages/Rules.jsx";
 import Editfact from "./components/Editfact.jsx";
 import Addfact from "./pages/addfact.jsx";
 import Inference from "./pages/Inference.jsx";
+import CategoryPage from "./pages/Category.jsx";
 
 // Check for authentication
 const isAuthenticated = () => !!localStorage.getItem("token");
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: "/rules/addrules",
     element: requireAuth(<Addfact />),
+  },
+  {
+    path: "/categorys",
+    element: requireAuth(<CategoryPage />),
   },
   {
     path: "/inference",

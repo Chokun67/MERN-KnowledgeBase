@@ -3,6 +3,7 @@ import Navi from "../components/Navi";
 import { Link } from "react-router-dom";
 import Category from "../components/category";
 import axios from "axios";
+import swalactive from "../components/swalfire";
 
 function Inference() {
   const [loading, setLoading] = useState(false);
@@ -113,7 +114,7 @@ function Inference() {
         Inferengine2();
       }
     }else{
-      console.log("plsese select category")
+      swalactive("warning","Plsese select category")
     }
   };
 

@@ -2,6 +2,7 @@ import React, { useState,useEffect } from "react";
 import Navi from "../components/Navi";
 import axios from "axios";
 import { useNavigate ,useParams} from "react-router-dom";
+import swalactive from "../components/swalfire";
 
 function addfact() {
   const [fact, setfact] = useState("");
@@ -23,10 +24,12 @@ function addfact() {
       .then(() => {
         setLoading(false);
         navigate("/");
+        swalactive("success","Successfully added information")
       })
       .catch((error) => {
         setLoading(false);
         console.log(error);
+        swalactive("error","Failed to add information")
       });
   };
 

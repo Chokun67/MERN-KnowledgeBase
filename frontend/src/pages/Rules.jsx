@@ -49,7 +49,7 @@ function Rules() {
       <div className="flex-col w-full absolute top-0 bg-sky-200 flex justify-start">
         <Navi />
         <div className=" h-fit flex justify-center items-center flex-col px-8">
-          <p>ชื่อผู้ใช้งาน: จอนสมิท</p>
+          <p>User : admin</p>
           <Category onReceiveValue={handleReceiveValue} />
           <p>Category : {categoryValue}</p>
           <Addrule facts={facts} category_id={categoryValue} onReceiveValue={handleReceiveRule} addRuleControl={addRuleControl}/>

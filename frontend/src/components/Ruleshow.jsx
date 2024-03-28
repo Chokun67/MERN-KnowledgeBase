@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Modal from "../components/Editmodal";
+import Swal from "sweetalert2";
 
-function Ruledata({  categoryData ,addRuleControl}) {
+function Ruledata({ categoryData, addRuleControl }) {
   const [loading, setLoading] = useState(false);
   const [selectedrule, setSelectedrule] = useState(null);
   const [knowledge, setKnowledge] = useState([]);
@@ -26,23 +27,38 @@ function Ruledata({  categoryData ,addRuleControl}) {
         console.log(error);
         setLoading(false);
       });
-  }, [categoryData,reloadValue,addRuleControl]);
+  }, [categoryData, reloadValue, addRuleControl]);
 
   const handleDeleteBook = (id) => {
-    setLoading(true);
-    axios
-      .delete(`http://localhost:5555/rules/${id}`)
-      .then(() => {
-        setLoading(false);
-        navigate("/rules");
-        setReloadValue((pre) => pre+1)
-        // window.location.reload(); // รีโหลดหน้าเว็บ
-      })
-      .catch((error) => {
-        setLoading(false);
-        // alert('An error happened. Please Chack console');
-        console.log(error);
-      });
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success",
+        });
+        axios
+          .delete(`http://localhost:5555/rules/${id}`)
+          .then(() => {
+            setLoading(false);
+            navigate("/rules");
+            setReloadValue((pre) => pre + 1);
+            // window.location.reload(); // รีโหลดหน้าเว็บ
+          })
+          .catch((error) => {
+            setLoading(false);
+            console.log(error);
+          });
+      }
+    });
   };
 
   const [isModalOpen, setModalOpen] = useState(false);

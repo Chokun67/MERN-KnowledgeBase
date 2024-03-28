@@ -41,6 +41,9 @@ function Navi() {
           <Link to="/rules" className="block mt-4 lg:inline-block lg:mt-0 text-lg text-teal-200 hover:text-white mr-4">
             Rules Editor
           </Link>
+          <Link to="/categorys" className="block mt-4 lg:inline-block lg:mt-0 text-lg text-teal-200 hover:text-white mr-4">
+            Category Editor
+          </Link>
         </div>
         <div>
           {isLoggedIn ? (

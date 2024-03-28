@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Navi from "../components/Navi";
 import Factshow from "../components/Factshow";
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Category from "../components/category";
+import swalactive from "../components/swalfire";
+
 
 function Knowledge() {
   const [facts, setFacts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [categoryValue, setcategoryValue] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -28,21 +31,29 @@ function Knowledge() {
     setcategoryValue(value);
   };
 
+  const handleLinkClick = () => {
+    if (categoryValue == null) {
+      swalactive("warning","Plese selected category")
+    } else {
+      navigate(`/createfact/${categoryValue}`);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col w-full absolute top-0">
         <Navi />
         <div className="bg-sky-200 w-60vw flex items-center flex-col min-h-screen">
-          <p>ชื่อผู้ใช้งาน: จอนสมิท</p>
-          <Category onReceiveValue={handleReceiveValue}/>
+          <p>User : admin</p>
+          <Category onReceiveValue={handleReceiveValue} />
           <p>Category : {categoryValue}</p>
-          <Link
-            to={`/createfact/${categoryValue}`}
+          <button
+            onClick={handleLinkClick}
             className="bg-blue-500 text-white py-2 px-8 m-2 rounded hover:bg-blue-700"
           >
             Add
-          </Link>
-          <Factshow facts={facts} category={categoryValue}/>
+          </button>
+          <Factshow facts={facts} category={categoryValue} />
         </div>
       </div>
     </>
