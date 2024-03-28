@@ -5,6 +5,7 @@ import factsRoute from './routes/factsRoute.js';
 import rulesRoute from './routes/ruleRoute.js';
 import inference from './routes/Inference.js';
 import categoryRoute from './routes/categoryRoute.js';
+import authRoute from './routes/authRoute.js';
 
 import cors from 'cors';
 
@@ -33,6 +34,7 @@ app.use('/facts', factsRoute);
 app.use('/rules', rulesRoute);
 app.use('/category', categoryRoute);
 app.use('/infer', inference);
+app.use('/auth', authRoute);
 
 
 mongoose

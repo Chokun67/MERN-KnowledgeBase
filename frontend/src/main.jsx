@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import Signin from "./pages/authen.jsx";
 import Knowledge from "./pages/knowledge.jsx";
 import Rules from "./pages/Rules.jsx";
@@ -10,6 +10,13 @@ import Editfact from "./components/Editfact.jsx";
 import Addfact from "./pages/addfact.jsx";
 import Inference from "./pages/Inference.jsx";
 
+// Check for authentication
+const isAuthenticated = () => !!localStorage.getItem("token");
+
+// Define a wrapper for your routes that requires authentication
+const requireAuth = (element) => {
+  return isAuthenticated() ? element : <Navigate to="/" replace />;
+};
 
 const router = createBrowserRouter([
   {
@@ -18,24 +25,23 @@ const router = createBrowserRouter([
   },
   {
     path: "/data",
-    element: <Knowledge />,
+    element: requireAuth(<Knowledge />),
   },
-
   {
     path: "/editfact/:id",
-    element: <Editfact />,
+    element: requireAuth(<Editfact />),
   },
   {
     path: "/createfact/:id",
-    element: <Addfact />,
+    element: requireAuth(<Addfact />),
   },
   {
     path: "/rules",
-    element: <Rules />,
+    element: requireAuth(<Rules />),
   },
   {
     path: "/rules/addrules",
-    element: <Addfact />,
+    element: requireAuth(<Addfact />),
   },
   {
     path: "/inference",
@@ -48,3 +54,4 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <RouterProvider router={router} />
   </React.StrictMode>
 );
+

@@ -118,6 +118,12 @@ function Inference() {
   };
 
   const handleReceiveValue = (value) => {
+    setWorkmemo_F([]);
+    setWorkmemo_T([]);
+    setFinalresult([]);
+    setResponses([]);
+    setQuestionrule([]);
+    setResponsesY([]);
     setcategoryValue(value);
   };
 
