@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdOutlineDelete } from "react-icons/md";
-import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
-import Modal from "../components/Editmodal";
+import EditModal from "../components/Editmodal";
 import Swal from "sweetalert2";
+import { ruleAPI } from "../controllers/ruleController";
 
 function Ruledata({ categoryData, addRuleControl }) {
   const [loading, setLoading] = useState(false);
@@ -16,8 +15,7 @@ function Ruledata({ categoryData, addRuleControl }) {
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get(`http://localhost:5555/rules?category_id=${categoryData}`)
+    ruleAPI.getAllType_rule(categoryData)
       .then((response) => {
         setKnowledge(response.data.data);
         setLoading(false);
@@ -45,8 +43,7 @@ function Ruledata({ categoryData, addRuleControl }) {
           text: "Your file has been deleted.",
           icon: "success",
         });
-        axios
-          .delete(`http://localhost:5555/rules/${id}`)
+        ruleAPI.delete_rule(id)
           .then(() => {
             setLoading(false);
             navigate("/rules");
@@ -70,15 +67,19 @@ function Ruledata({ categoryData, addRuleControl }) {
   const closeModal = () => {
     setModalOpen(false);
   };
+  const handleReceiveRule=(value) =>{
+    setReloadValue(value)
+  }
 
   return (
     <>
       <div className="flex w-full h-full justify-center items-center my-8">
-        <Modal
+        <EditModal
           isOpen={isModalOpen}
           onClose={closeModal}
           ruleData={selectedrule}
           categoryData={categoryData}
+          onReceiveValue={handleReceiveRule}
         />
         <div className="max-w-6xl w-full min-h-96 h-96 bg-white overflow-auto">
           <table>

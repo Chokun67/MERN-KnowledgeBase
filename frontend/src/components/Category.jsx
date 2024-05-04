@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { categoryAPI } from "../controllers/categoryController";
 
 function category({ onReceiveValue }) {
   const [categories, setCategories] = useState([]);
@@ -13,7 +14,7 @@ function category({ onReceiveValue }) {
   const fetchCategories = async () => {
     try {
       // เรียก API ดึงข้อมูลหมวดหมู่
-      const response = await axios("http://localhost:5555/category");
+      const response = await categoryAPI.getAll_category();
       // ตั้งค่าข้อมูลหมวดหมู่ให้กับ state
       console.log(response.data.data)
       setCategories(response.data.data);
@@ -30,9 +31,9 @@ function category({ onReceiveValue }) {
 
   return (
     <div className="w-full flex flex-col max-w-6xl my-3">
-      <p className="text-lg font-bold mb-2">Please chose your category</p>
+      <p className="text-lg font-bold mb-2">Please chose your knowledge</p>
       <select className="py-1 px-2 rounded-sm" value={selectedCategory} onChange={(e) => handleSelectCategory(e.target.value)}>
-        {selectedCategory==""?<option value="">Please select category</option>:null}
+        {selectedCategory==""?<option value="">Please select knowledge</option>:null}
         {Array.isArray(categories) &&
           categories.map((category) => (
             <option key={category._id} value={category._id}>

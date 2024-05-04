@@ -5,15 +5,16 @@ import mongoose from 'mongoose';
 const router = express.Router();
 
 import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
+// import { fileURLToPath } from "url"; // ไม่จำเป็นต้องนำเข้า
+// import { dirname } from "path"; // ไม่จำเป็นต้องนำเข้า
 const currentFileUrl = import.meta.url;
-const currentFilePath = fileURLToPath(currentFileUrl);
-const currentDirectory = dirname(currentFilePath);
+// const currentFilePath = fileURLToPath(currentFileUrl); // ไม่จำเป็นต้องใช้
+// const currentDirectory = dirname(currentFilePath); // ไม่จำเป็นต้องใช้
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(currentDirectory, "../uploads"));
+    cb(null, path.join(currentFileUrl, "../uploads"));
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);

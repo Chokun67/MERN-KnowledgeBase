@@ -6,14 +6,15 @@ import Swal from "sweetalert2";
 import swalactive from "../components/swalfire";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdOutlineDelete } from "react-icons/md";
+import { categoryAPI } from "../controllers/categoryController";
 
 function CategoryPage() {
   const [categorys, setCategorys] = useState([]);
   const [datachange, setDatachange] = useState(0);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5555/category`)
+    categoryAPI
+      .getAll_category()
       .then((response) => {
         setCategorys(response.data.data);
       })
@@ -38,8 +39,8 @@ function CategoryPage() {
           text: "Your file has been deleted.",
           icon: "success",
         });
-        axios
-          .delete(`http://localhost:5555/category/${id}`)
+        categoryAPI
+          .delete_category(id)
           .then(() => {
             setDatachange((pre) => pre + 1);
             swalactive("success", "Delete success");
@@ -62,8 +63,8 @@ function CategoryPage() {
       confirmButtonText: "Add",
       showLoaderOnConfirm: true,
       preConfirm: async (data) => {
-        axios
-          .post("http://localhost:5555/category", { category_name: data })
+        categoryAPI
+          .add_category(data)
           .then(() => {
             setDatachange((pre) => pre + 1);
             swalactive("success", "Successfully added information");
@@ -76,10 +77,11 @@ function CategoryPage() {
     });
   };
 
-  const handleEditBook = (id) => {
+  const handleEditBook = (id, oldName) => {
     Swal.fire({
       title: "Edit name category",
       input: "text",
+      inputValue: oldName,
       inputAttributes: {
         autocapitalize: "off",
       },
@@ -87,14 +89,14 @@ function CategoryPage() {
       confirmButtonText: "Add",
       showLoaderOnConfirm: true,
       preConfirm: async (data) => {
-        axios
-          .put(`http://localhost:5555/category/${id}`, { category_name: data })
+        categoryAPI
+          .edit_category(id, data)
           .then(() => {
             setDatachange((pre) => pre + 1);
             swalactive("success", "Successfully edited information");
           })
           .catch((error) => {
-            swalactive("error", "Failed to edited information");
+            swalactive(error, "Failed to edited information");
           });
       },
       allowOutsideClick: () => !Swal.isLoading(),
@@ -111,14 +113,14 @@ function CategoryPage() {
             onClick={handleLinkClick}
             className="bg-blue-500 text-white py-2 px-8 mb-4 rounded hover:bg-blue-700"
           >
-            Add Category
+            Add Knowledge
           </button>
           <div className="w-9/12 min-h-96 h-96 bg-white overflow-auto">
             <table>
               <thead>
                 <tr>
                   <th>No.</th>
-                  <th>Categorys</th>
+                  <th>Knowledge</th>
                   <th>Edit</th>
                 </tr>
               </thead>
@@ -131,7 +133,9 @@ function CategoryPage() {
                       <div className="flex justify-center gap-x-4 cursor-pointer">
                         <AiOutlineEdit
                           className="text-2xl text-yellow-600"
-                          onClick={() => handleEditBook(category._id)}
+                          onClick={() =>
+                            handleEditBook(category._id, category.category_name)
+                          }
                         />
                         <MdOutlineDelete
                           className="text-2xl text-red-600 cursor-pointer"

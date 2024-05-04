@@ -4,6 +4,8 @@ import Addrule from "../components/addrule";
 import Ruledata from "../components/Ruleshow";
 import axios from "axios";
 import Category from "../components/category";
+import { factAPI } from "../controllers/factController";
+import { ruleAPI } from "../controllers/ruleController";
 
 function Rules() {
   const [facts, setFacts] = useState([]);
@@ -14,8 +16,7 @@ function Rules() {
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get(`http://localhost:5555/facts?category_id=${categoryValue}`)
+      factAPI.getAllType_fact(categoryValue)
       .then((response) => {
         setFacts(response.data.data);
         setLoading(false);
@@ -24,12 +25,10 @@ function Rules() {
         console.log(error);
         setLoading(false);
       });
-    axios
-      .get(`http://localhost:5555/rules?category_id=${categoryValue}`)
+      ruleAPI.getAllType_rule(categoryValue)
       .then((response) => {
         setKnowledge(response.data.data);
         setLoading(false);
-        console.log(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -51,7 +50,7 @@ function Rules() {
         <div className=" h-fit flex justify-center items-center flex-col px-8">
           <p>User : admin</p>
           <Category onReceiveValue={handleReceiveValue} />
-          <p>Category : {categoryValue}</p>
+          <p>Knowledge_id : {categoryValue}</p>
           <Addrule facts={facts} category_id={categoryValue} onReceiveValue={handleReceiveRule} addRuleControl={addRuleControl}/>
           <Ruledata knowledge={knowledge} categoryData={categoryValue} addRuleControl={addRuleControl}/>
         </div>

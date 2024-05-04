@@ -2,7 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 import Signin from "./pages/authen.jsx";
 import Knowledge from "./pages/knowledge.jsx";
 import Rules from "./pages/Rules.jsx";
@@ -16,13 +20,18 @@ const isAuthenticated = () => !!localStorage.getItem("token");
 
 // Define a wrapper for your routes that requires authentication
 const requireAuth = (element) => {
-  return isAuthenticated() ? element : <Navigate to="/" replace />;
+  if (!isAuthenticated()) {
+    localStorage.removeItem("token");
+    return <Navigate to="/login" replace />;
+  }
+
+  return element;
 };
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Signin />,
+    element: <Inference />,
   },
   {
     path: "/data",
@@ -32,25 +41,19 @@ const router = createBrowserRouter([
     path: "/editfact/:id",
     element: requireAuth(<Editfact />),
   },
-  {
-    path: "/createfact/:id",
-    element: requireAuth(<Addfact />),
-  },
+
   {
     path: "/rules",
     element: requireAuth(<Rules />),
   },
-  {
-    path: "/rules/addrules",
-    element: requireAuth(<Addfact />),
-  },
+
   {
     path: "/categorys",
     element: requireAuth(<CategoryPage />),
   },
   {
-    path: "/inference",
-    element: <Inference />,
+    path: "/login",
+    element: <Signin />,
   },
 ]);
 
@@ -59,4 +62,3 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <RouterProvider router={router} />
   </React.StrictMode>
 );
-

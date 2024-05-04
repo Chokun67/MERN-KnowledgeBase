@@ -36,6 +36,10 @@ app.use('/category', categoryRoute);
 app.use('/infer', inference);
 app.use('/auth', authRoute);
 
+app.get('/api', (req, res) => {
+  res.send('hello test backend');
+});
+
 
 mongoose
   .connect('mongodb://localhost:27017/Bookstore')

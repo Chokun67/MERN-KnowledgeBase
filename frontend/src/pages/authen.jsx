@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import swalactive from '../components/swalfire';
+import { factAPI } from '../controllers/factController';
 
 function Signin() {
   const navigate = useNavigate();
@@ -23,29 +24,20 @@ function Signin() {
     event.preventDefault(); // Prevent default form submission
 
     try {
-      const response = await fetch('http://localhost:5555/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: username, // Adjust according to your backend expectations
-          password: password,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-
-      const data = await response.json();
-      localStorage.setItem('token', data.token); // Store the token
-      navigate('/inference'); // Navigate after login
-      swalactive("success","Login success")
+      const data = await factAPI.loginAPI(username, password);;
+      storeTokenAndNavigate(data);
     } catch (error) {
       console.error('Login error:', error);
       swalactive("error","Login failed");
     }
+  };
+  const storeTokenAndNavigate = async (data) => {
+    await new Promise((resolve) => {
+      localStorage.setItem('token', data.token); // จัดเก็บ token ใน localStorage
+      resolve(); // แสดงว่าการเก็บข้อมูลเสร็จสิ้น
+    });
+    navigate('/data');
+    swalactive('success', 'Login success');
   };
 
   return (

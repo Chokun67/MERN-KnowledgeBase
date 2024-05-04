@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import swalactive from "./swalfire";
+import { ruleAPI } from "../controllers/ruleController";
 
 function Addrule({ facts, category_id, onReceiveValue, addRuleControl }) {
   const [loading, setLoading] = useState(false);
@@ -56,8 +57,7 @@ function Addrule({ facts, category_id, onReceiveValue, addRuleControl }) {
       category_id: category_id,
     };
     console.log(data);
-    axios
-      .post("http://localhost:5555/rules", data)
+    ruleAPI.add_rule(data)
       .then(() => {
         // navigate("/rules");
         // window.location.reload();
@@ -96,7 +96,7 @@ function Addrule({ facts, category_id, onReceiveValue, addRuleControl }) {
   };
   const handleRemoveConclude = (index) => {
     const updatedConclude = conclude.filter((item, idx) => idx !== index);
-    setCause(updatedConclude);
+    setConclude(updatedConclude);
   };
 
   return (

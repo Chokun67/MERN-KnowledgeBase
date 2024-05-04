@@ -114,7 +114,7 @@ function Inference() {
         Inferengine2();
       }
     }else{
-      swalactive("warning","Plsese select category")
+      swalactive("warning","Plsese select knowledge")
     }
   };
 
@@ -134,10 +134,9 @@ function Inference() {
       <div className="bg-sky-200 h-full flex items-center flex-col px-8 lg:px-0">
       <Category onReceiveValue={handleReceiveValue} />
         <div className="w-full items-left max-w-6xl">
-          <p className="text-lg font-bold py-2">Inference by fact</p>
+          <p className="text-lg font-bold py-2">Search for diseases</p>
           <p className="text-base">
-            To Insert a multiple fact use this systex to in put fact a,c,e in
-            working memory
+            Put in the facts you want, you can add multiple ones by using commas.
           </p>
           <div className="flex items-center space-x-4 w-full">
             <div className="my-4 w-full">
